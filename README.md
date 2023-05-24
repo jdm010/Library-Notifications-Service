@@ -1,8 +1,8 @@
-# Library Newsletter Service
+# Library Notifications Service
 
 > WIP
 
-## Development
+## Development steps
 
 1. Clone the repository.
 2. Move to the cloned repository.
