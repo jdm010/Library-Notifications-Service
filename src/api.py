@@ -1,14 +1,14 @@
-"""Module interacting with library catalouge api"""
+"""Module interacting with library catalogue api"""
 
 
 import requests
 import urllib.parse
 
-from .env import LIBRARY_CATALOUGE_SERVER, LIBRARY_CATALOUGE_SERVER_SUFFIX
+from .env import LIBRARY_CATALOGUE_SERVER, LIBRARY_CATALOGUE_SERVER_SUFFIX
 
 
 def make_api_request(query):
-    library_url = LIBRARY_CATALOUGE_SERVER + LIBRARY_CATALOUGE_SERVER_SUFFIX
+    library_url = LIBRARY_CATALOGUE_SERVER + LIBRARY_CATALOGUE_SERVER_SUFFIX
     query_encoded = urllib.parse.quote(query)
 
     response = requests.get(f"{library_url}{query_encoded}")
