@@ -14,26 +14,26 @@ def get_full_query(pid, created, subject, pub_year):
     if pid and (pid_query := get_pid_query(pid)):
         fields.append(pid_query)
 
-    if created and (created_query := get_created_query(created)):
+    if created and (created_query := get_range_query(created, "_created")):
         fields.append(created_query)
 
     if subject and (subject_query := get_subject_query(subject)):
         fields.append(subject_query)
 
-    if pub_year and (pub_year_query := get_publicaion_year_query(pub_year)):
+    if pub_year and (pub_year_query := get_range_query(pub_year, "publication_year")):
         fields.append(pub_year_query)
 
     return get_and_join(fields)
 
 
-def get_created_query(created):
-    created_start, created_end = created.split(":")
-    return f"_created:[{created_start} TO {created_end}]"
+def get_range_query(query_list, field, split_char=":"):
+    query_strings = []
+    for query in query_list:
+        start, end = query.split(split_char)
+        query_strings.append(f"{field}:[{start} TO {end}]")
 
-
-def get_publicaion_year_query(pub_year):
-    pub_year_start, pub_year_end = pub_year.split(":")
-    return f"publication_year:[{pub_year_start} TO {pub_year_end}]"
+    query = get_or_join(query_strings)
+    return f"({query})"
 
 
 def get_subject_query(subjects):

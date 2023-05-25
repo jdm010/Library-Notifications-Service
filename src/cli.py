@@ -17,6 +17,7 @@ from .utils import get_full_query
 @click.option(
     "--created",
     type=click.STRING,
+    multiple=True,
     help='Date range for created filter in "YYYY-MM-DD:YYYY-MM-DD" format.',
 )
 @click.option(
@@ -28,6 +29,7 @@ from .utils import get_full_query
 @click.option(
     "--pub-year",
     type=click.STRING,
+    multiple=True,
     help='Year range for publication year filter in "YYYY:YYYY" format.',
 )
 def get_documents_to_notify(pid, created, subjects, pub_year):
