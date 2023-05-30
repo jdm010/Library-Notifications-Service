@@ -1,0 +1,22 @@
+name: Build and export image
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  build-image:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and export
+        uses: cern-sis/gh-workflows/.github/actions/docker-build@v6.1.0
+        with:
+          platforms: linux/amd64,linux/arm64
+          image: cern-sis/library-notifications-service
+          registry: registry.cern.ch
+          cache: false
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
