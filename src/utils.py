@@ -1,15 +1,11 @@
 """Module containing methods related to query generator."""
 
+from datetime import datetime, timedelta
 
-def get_or_join(queries):
-    return " OR ".join(queries)
-
-
-def get_and_join(queries):
-    return " AND ".join(queries)
+from .env import LIBRARY_CATALOGUE_SITE_URL
 
 
-def get_full_query(pid, created, subject, pub_year):
+def get_full_query(pid=None, created=None, subject=None, pub_year=None):
     fields = []
     if pid and (pid_query := get_pid_query(pid)):
         fields.append(pid_query)
@@ -24,6 +20,30 @@ def get_full_query(pid, created, subject, pub_year):
         fields.append(pub_year_query)
 
     return get_and_join(fields)
+
+
+def get_or_join(queries):
+    return " OR ".join(queries)
+
+
+def get_and_join(queries):
+    return " AND ".join(queries)
+
+
+def get_last_week_date_range():
+    today = datetime.today().date()
+    last_week_start = today - timedelta(days=today.weekday() + 7)
+    last_week_end = last_week_start + timedelta(days=6)
+    date_range = f"{last_week_start.isoformat()}:{last_week_end.isoformat()}"
+    return [date_range]
+
+
+def get_last_five_years_range():
+    current_year = datetime.today().year
+    last_five_years_start = current_year - 5
+    last_five_years_end = current_year - 1
+    date_range = f"{last_five_years_start}:{last_five_years_end}"
+    return [date_range]
 
 
 def get_range_query(query_list, field, split_char=":"):
@@ -55,3 +75,21 @@ def get_subject_query(subjects):
 def get_pid_query(pid):
     pid_query = get_or_join([f"pid: {_pid}" for _pid in pid])
     return f"({pid_query})"
+
+
+def get_pids_from_docs(docs):
+    return [doc.get("id", "") for doc in docs]
+
+
+def create_channel_message(docs):
+    html_string = "<h1>Latest updates from Library</h1>\n<ul>\n"
+
+    for doc in docs:
+        doc_id = doc.get("id", "")
+        if doc_id:
+            doc_url = f"{LIBRARY_CATALOGUE_SITE_URL}{doc_id}"
+            doc_title = doc.get("metadata", {}).get("title", "")
+            html_string += f"<li><a href='{doc_url}'>{doc_title}</a></li>\n"
+
+    html_string += "</ul>"
+    return html_string
