@@ -34,8 +34,8 @@ def send_notifications(subjects):
         click.echo("No results visible in the catalogue!")
         return
 
-    notification = send_channel_request(create_channel_message(message))
-    if notification == 200:
+    notification_status = send_channel_request(create_channel_message(message))
+    if notification_status == 200:
         click.echo("Notification sent successfully!")
         return
 

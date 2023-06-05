@@ -9,21 +9,22 @@ def get_full_query(
     pid=None, created=None, subject=None, pub_year=None, restricted=True
 ):
     fields = []
-    if pid and (pid_query := get_pid_query(pid)):
-        fields.append(pid_query)
-
-    if created and (created_query := get_range_query(created, "_created")):
-        fields.append(created_query)
-
-    if subject and (subject_query := get_subject_query(subject)):
-        fields.append(subject_query)
 
     if pub_year and (pub_year_query := get_range_query(pub_year, "publication_year")):
         fields.append(pub_year_query)
 
+    if created and (created_query := get_range_query(created, "_created")):
+        fields.append(created_query)
+
+    if pid and (pid_query := get_pid_query(pid)):
+        fields.append(pid_query)
+
+    if subject and (subject_query := get_subject_query(subject)):
+        fields.append(subject_query)
+
     # Show only non restricted results
     if restricted is False:
-        fields.append("metadata.restricted: false")
+        fields.append("NOT restricted: true")
 
     return get_and_join(fields)
 
@@ -56,7 +57,7 @@ def get_range_query(query_list, field, split_char=":"):
     query_strings = []
     for query in query_list:
         start, end = query.split(split_char)
-        query_strings.append(f"{field}:[{start} TO {end}]")
+        query_strings.append(f"{field}:{start} TO {end}")
 
     query = get_or_join(query_strings)
     return f"({query})"
@@ -84,7 +85,12 @@ def get_pid_query(pid):
 
 
 def get_pids_from_docs(docs):
-    return [doc.get("id", "") for doc in docs]
+    pids = []
+    for doc in docs:
+        metadata = doc.get("metadata")
+        if metadata and "document_pid" in metadata:
+            pids.append(metadata["document_pid"])
+    return pids
 
 
 def create_channel_message(message):
