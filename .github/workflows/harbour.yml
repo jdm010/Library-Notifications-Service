@@ -12,6 +12,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build and export
+        id: build
         uses: cern-sis/gh-workflows/.github/actions/docker-build@v6.1.0
         with:
           platforms: linux/amd64,linux/arm64
@@ -22,8 +23,8 @@ jobs:
           password: ${{ secrets.HARBOR_PASSWORD }}
 
       - name: Deploy with new image
-        uses: cern-sis/gh-workflows/.github/actions/kubernetes-project-update@v6.1.0
+        uses: cern-sis/gh-workflows/.github/actions/kubernetes-project-new-images@v6.1.0
         with:
           event-type: update
-          images: registry.cern.ch/cern-sis/library-notifications-service
-          token: ${{ secrets.PAT_FIRE_EVENTS_ON_CERN_SIS_KUBERNETES  }}
+          images: ${{ steps.build.outputs.image-tags }}
+          token: ${{ secrets.PAT_FIRE_EVENTS_ON_CERN_SIS_KUBERNETES }}
