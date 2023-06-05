@@ -66,7 +66,7 @@ def get_site_api_docs(query):
     if count == 0:
         return None
     # Send query link only if results > 20
-    if count > MAX_NOTIFICATION_RESULTS_COUNT:
+    if count > int(MAX_NOTIFICATION_RESULTS_COUNT):
         return f"{LIBRARY_CATALOGUE_SITE_URL}{query_encoded}"
 
     return hits
