@@ -82,7 +82,7 @@ def get_pids_from_docs(docs):
 
 
 def create_channel_message(docs):
-    html_string = "<h1>Latest updates from Library</h1>\n<ul>\n"
+    html_string = "<h1>Latest books/e-books</h1>\n<ul>\n"
 
     for doc in docs:
         doc_id = doc.get("id", "")
