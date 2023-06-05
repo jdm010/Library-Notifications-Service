@@ -24,10 +24,20 @@ def send_notifications(subjects):
     python3 -m src.cli --subjects "005*:UDC" --subjects "65*:" \n
     """
     latest_pids = get_backoffice_latest_pids()
-    filtered_docs = get_site_api_docs(get_full_query(pid=latest_pids, subject=subjects))
-    notification = send_channel_request(create_channel_message(filtered_docs))
+    if not latest_pids:
+        click.echo("No updates in the backoffice!")
+        return
+
+    catalogue_site_query = get_full_query(pid=latest_pids, subject=subjects)
+    message = get_site_api_docs(catalogue_site_query)
+    if message is None:
+        click.echo("No results visible in the catalogue!")
+        return
+
+    notification = send_channel_request(create_channel_message(message))
     if notification == 200:
         click.echo("Notification sent successfully!")
+        return
 
 
 if __name__ == "__main__":

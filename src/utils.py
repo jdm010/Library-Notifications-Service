@@ -5,7 +5,9 @@ from datetime import datetime, timedelta
 from .env import LIBRARY_CATALOGUE_SITE_URL
 
 
-def get_full_query(pid=None, created=None, subject=None, pub_year=None):
+def get_full_query(
+    pid=None, created=None, subject=None, pub_year=None, restricted=True
+):
     fields = []
     if pid and (pid_query := get_pid_query(pid)):
         fields.append(pid_query)
@@ -18,6 +20,10 @@ def get_full_query(pid=None, created=None, subject=None, pub_year=None):
 
     if pub_year and (pub_year_query := get_range_query(pub_year, "publication_year")):
         fields.append(pub_year_query)
+
+    # Show only non restricted results
+    if restricted is False:
+        fields.append("metadata.restricted: false")
 
     return get_and_join(fields)
 
@@ -81,15 +87,19 @@ def get_pids_from_docs(docs):
     return [doc.get("id", "") for doc in docs]
 
 
-def create_channel_message(docs):
+def create_channel_message(message):
     html_string = "<h1>Latest books/e-books</h1>\n<ul>\n"
 
-    for doc in docs:
-        doc_id = doc.get("id", "")
-        if doc_id:
-            doc_url = f"{LIBRARY_CATALOGUE_SITE_URL}{doc_id}"
-            doc_title = doc.get("metadata", {}).get("title", "")
-            html_string += f"<li><a href='{doc_url}'>{doc_title}</a></li>\n"
+    if isinstance(message, list):
+        for doc in message:
+            doc_id = doc.get("id", "")
+            if doc_id:
+                doc_url = f"{LIBRARY_CATALOGUE_SITE_URL}{doc_id}"
+                doc_title = doc.get("metadata", {}).get("title", "")
+                html_string += f"<li><a href='{doc_url}'>{doc_title}</a></li>\n"
+        html_string += "</ul>"
 
-    html_string += "</ul>"
+    if isinstance(message, str):
+        html_string += f"<li><a href='{message}'>{message}</a></li></ul>\n"
+
     return html_string
