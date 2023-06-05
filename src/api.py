@@ -39,7 +39,10 @@ def get_backoffice_latest_pids():
     query_encoded = urllib.parse.quote(query)
 
     pids = []
-    headers = {"Authorization": f"Bearer {LIBRARY_CATALOGUE_BACKOFFICE_API_TOKEN}"}
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {LIBRARY_CATALOGUE_BACKOFFICE_API_TOKEN}",
+    }
     for url in get_library_catalogue_backoffice_urls():
         response = requests.get(f"{url}{query_encoded}", headers=headers)
         try:
