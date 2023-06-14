@@ -4,7 +4,7 @@
 import click
 
 from .api import get_backoffice_latest_pids, get_site_api_docs, send_channel_request
-from .utils import create_channel_message, get_full_query
+from .utils import create_channel_message, get_full_query, get_last_five_years_range
 
 
 @click.command()
@@ -28,7 +28,10 @@ def send_notifications(subjects):
         click.echo("No updates in the backoffice!")
         return
 
-    catalogue_site_query = get_full_query(pid=latest_pids, subject=subjects)
+    published = get_last_five_years_range()
+    catalogue_site_query = get_full_query(
+        pid=latest_pids, pub_year=published, subject=subjects
+    )
     message = get_site_api_docs(catalogue_site_query)
     if message is None:
         click.echo("No results visible in the catalogue!")

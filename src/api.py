@@ -19,7 +19,6 @@ from .env import (
 )
 from .utils import (
     get_full_query,
-    get_last_five_years_range,
     get_last_week_date_range,
     get_pids_from_docs,
 )
@@ -34,8 +33,7 @@ def get_library_catalogue_backoffice_urls():
 
 def get_backoffice_latest_pids():
     created = get_last_week_date_range()
-    published = get_last_five_years_range()
-    query = get_full_query(created=created, pub_year=published, restricted=False)
+    query = get_full_query(created=created, restricted=False)
     query_encoded = urllib.parse.quote(query)
 
     pids = []

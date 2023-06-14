@@ -41,16 +41,16 @@ def get_last_week_date_range():
     today = datetime.today().date()
     last_week_start = today - timedelta(days=today.weekday() + 7)
     last_week_end = last_week_start + timedelta(days=6)
-    date_range = f"{last_week_start.isoformat()}:{last_week_end.isoformat()}"
+    date_range = f"[{last_week_start.isoformat()}:{last_week_end.isoformat()}]"
     return [date_range]
 
 
 def get_last_five_years_range():
     current_year = datetime.today().year
-    last_five_years_start = current_year - 5
-    last_five_years_end = current_year - 1
-    date_range = f"{last_five_years_start}:{last_five_years_end}"
-    return [date_range]
+    last_five_years_start = current_year - 4
+    last_five_years_end = current_year
+    year_range = f"[{last_five_years_start}:{last_five_years_end}]"
+    return [year_range]
 
 
 def get_range_query(query_list, field, split_char=":"):
