@@ -93,8 +93,8 @@ def get_pids_from_docs(docs):
     return pids
 
 
-def create_channel_message(message):
-    html_string = "<h1>Latest books/e-books</h1>\n<ul>\n"
+def create_channel_message(message, title):
+    html_string = f"<h1>Latest books/e-books for {title}</h1>\n<ul>\n"
 
     if isinstance(message, list):
         for doc in message:

@@ -73,7 +73,7 @@ def get_site_api_docs(query):
     return hits
 
 
-def send_channel_request(data):
+def send_channel_request(data, target):
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {NOTIFICATIONS_API_SECRET}",
@@ -83,6 +83,7 @@ def send_channel_request(data):
         "summary": "Library Updates",
         "priority": "NORMAL",
         "body": data,
+        "targetGroups": [{"groupIdentifier": f"{target}"}],
     }
 
     response = requests.post(
