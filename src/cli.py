@@ -2,9 +2,10 @@
 
 
 import click
+from typing import Tuple
 
-from .api import get_backoffice_latest_pids, get_site_api_docs, send_channel_request
-from .utils import create_channel_message, get_full_query, get_last_five_years_range
+from .api import get_backoffice_latest_pids, send_channel_request, get_results_from_pids
+from .utils import create_channel_message
 
 
 @click.command()
@@ -27,7 +28,7 @@ from .utils import create_channel_message, get_full_query, get_last_five_years_r
     required=True,
     help="Egroup identifier. For eg. --target 'library-newsletter-notif-it'",
 )
-def send_notifications(subjects, title, target):
+def send_notifications(subjects: Tuple[str, ...], title: str, target: str) -> None:
     """A CLI command to send notifications for library updates.
 
     The created range is last 7 days from running the job.
@@ -41,18 +42,13 @@ def send_notifications(subjects, title, target):
         click.echo("No updates in the backoffice!")
         return
 
-    published = get_last_five_years_range()
-    catalogue_site_query = get_full_query(
-        pid=latest_pids, pub_year=published, subject=subjects
-    )
-    message = get_site_api_docs(catalogue_site_query)
-    if message is None:
+    results = get_results_from_pids(latest_pids, list(subjects))
+    if results is None:
         click.echo("No results visible in the catalogue!")
         return
 
-    notification_status = send_channel_request(
-        create_channel_message(message, title), target
-    )
+    message = create_channel_message(results, title)
+    notification_status = send_channel_request(message, target)
     if notification_status == 200:
         click.echo("Notification sent successfully!")
         return
