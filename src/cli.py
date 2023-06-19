@@ -43,7 +43,7 @@ def send_notifications(subjects: Tuple[str, ...], title: str, target: str) -> No
         return
 
     results = get_results_from_pids(latest_pids, list(subjects))
-    if results is None:
+    if not results:
         click.echo("No results visible in the catalogue!")
         return
 
