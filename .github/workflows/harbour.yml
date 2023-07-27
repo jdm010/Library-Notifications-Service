@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Test
+        run: pip install poetry && poetry install && poetry run pytest
+
       - name: Build and export
         id: build
         uses: cern-sis/gh-workflows/.github/actions/docker-build@v6.1.0

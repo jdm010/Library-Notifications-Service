@@ -1,12 +1,83 @@
 # Library Notifications Service
 
-## Development steps
+## System Requirements
 
-1. Clone the repository.
-2. Move to the cloned repository.
-3. Create a virtual environment. For example `env` : `python3 -m venv env`.
-4. Install `requirements.txt`: `pip install -r requirements.txt`
-5. Run the base command and explore options available. `python3 -m src.cli --help`
+- pyenv
+- Python >=3.11
+- pre-commit
+- Poetry
+
+## Setup
+
+Before you start, ensure you have `pyenv` installed on your system. If not, you can install it using Homebrew (for macOS):
+
+```bash
+$ brew update
+$ brew install pyenv
+```
+
+For Linux, you can use the command below:
+
+```bash
+$ curl https://pyenv.run | bash
+```
+
+For Windows, please refer to the official [pyenv-win](https://github.com/pyenv-win/pyenv-win) repository.
+
+Once `pyenv` is installed, you can install Python 3.11:
+
+```bash
+$ pyenv install 3.11.0
+$ pyenv global 3.11.0
+```
+
+Next, install `pre-commit`:
+
+```bash
+$ pip install pre-commit
+```
+
+And finally, install `poetry`:
+
+```bash
+$ curl -sSL https://install.python-poetry.org | python -
+```
+
+## Installing the Project
+
+1. Clone the repository to your local machine:
+
+    ```bash
+    $ git clone https://github.com/cern-sis/Library-Notifications-Service.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    $ cd Library-Notifications-Service
+    ```
+
+3. Install the dependencies using `poetry`:
+
+    ```bash
+    $ poetry install
+    ```
+
+4. Install pre-commit hooks:
+    ```bash
+    $ pre-commit install
+    ```
+
+
+## Usage
+
+After installing, you can use the CLI as follows:
+
+### Newsletter
+
+```bash
+$ python -m src.cli newsletter
+```
 
 ## Supported Arguments
 
