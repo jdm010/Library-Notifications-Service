@@ -11,10 +11,10 @@ from utils import (
 @click.option('--directory', prompt='Enter the directory', type=click.Path(exists=True, file_okay=False, dir_okay=True))
 def main(subject,directory):
     url = 'https://www.cambridge.org/core/services/librarians/kbart'
-    response_text = get_page_content(url)
+    response = get_page_content(url)
 
-    if response_text:
-        soup = BeautifulSoup(response_text, 'html.parser')
+    if response:
+        soup = BeautifulSoup(response.text, 'html.parser')
         prefix = 'cambridge ebooks and partner presses: 2023 '
         subjects = [subject]
         found_links = find_links_and_tags(soup, subjects, prefix)
