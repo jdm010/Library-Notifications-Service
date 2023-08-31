@@ -1,13 +1,18 @@
 import requests
+import structlog
+logger = structlog.get_logger()
 
 def get_page_content(url):
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise an HTTPError if the response status code indicates an error
-        return response.text
+        return response
+    except requests.exceptions.ConnectionError as err:
+        logger.error(err)
+        return response
     except requests.exceptions.HTTPError as err:
-        print(f"HTTP Error: Failed to fetch the webpage ({err})")
-        return None
+        logger.error(err)
+        return response
 
 def find_links_and_tags(soup, subjects, prefix):
     found_links = []
