@@ -1,11 +1,13 @@
 import requests
 import structlog
+import os
+
 logger = structlog.get_logger()
 
 def get_page_content(url):
     try:
         response = requests.get(url)
-        response.raise_for_status()  # Raise an HTTPError if the response status code indicates an error
+        response.raise_for_status()
         return response
     except requests.exceptions.ConnectionError as err:
         logger.error(err)
@@ -23,13 +25,16 @@ def find_links_and_tags(soup, subjects, prefix, suffix):
             if parent_tag.name == 'a' and parent_tag.get('href'):
                 link = parent_tag.get('href')
                 found_links.append(link)
+            else:
+                continue
     return found_links
 
 def download_file(url, desired_filename, target_filepath):
     response = requests.get(url)
     if response.status_code == 200:
         filename = f"{desired_filename}.tsv"
-        with open(target_filepath + filename, 'wb') as file:
+        file_path = os.path.join(target_filepath, filename)
+        with open(file_path, 'wb') as file:
             file.write(response.content)
         print(f'Successfully downloaded {filename}')
     else:
